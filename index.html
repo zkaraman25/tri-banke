@@ -698,19 +698,12 @@ let playing = false;
 const vinyl = $("vinyl"), ball = $("ball"), playTxt = $("playTxt"), glyph = $("glyph");
 const PLAY = "M7 4l13 8-13 8z", PAUSE = "M7 4h4v16H7zM14 4h4v16h-4z";
 
-const audio = new Audio(CONFIG.MP3);
+const audio = new Audio(CONFIG.MP3 + "#t=" + CONFIG.MP3_START);
 audio.preload = "auto";
-let cued = false;
-function cue(){
-  if(cued) return;
-  try{ audio.currentTime = CONFIG.MP3_START; cued = true; }catch(e){}
-}
-audio.addEventListener("loadedmetadata", cue);
 audio.addEventListener("ended", function(){ audio.currentTime = CONFIG.MP3_START; audio.play(); });
 audio.addEventListener("play", function(){ setPlaying(true); });
 audio.addEventListener("pause", function(){ setPlaying(false); });
 function tryPlay(){
-  cue();
   audio.play().catch(function(){ ytLink(); });
 }
 function setPlaying(on){
