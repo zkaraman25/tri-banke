@@ -159,7 +159,7 @@ h1 .lt{display:inline-block;transition:transform .55s cubic-bezier(.2,1.6,.35,1)
 
 /* poziv */
 .invite{font-size:clamp(19px,5.2vw,24px);font-weight:600;line-height:1.4;max-width:27ch;
-  margin-top:10px;will-change:transform;position:relative;z-index:2}
+  margin-top:26px;will-change:transform;position:relative;z-index:2}
 .invite em{font-style:normal;background:var(--blue);color:var(--paper);padding:1px 9px;
   display:inline-block;transform:rotate(-2deg);box-shadow:3px 3px 0 rgba(27,42,203,.28)}
 .sign{margin-top:12px;text-align:right;line-height:1;margin-bottom:30px}
@@ -177,6 +177,9 @@ h1 .lt{display:inline-block;transition:transform .55s cubic-bezier(.2,1.6,.35,1)
 
 /* igra */
 .game{margin:0 0 56px;text-align:center;position:relative;z-index:2}
+.modal-card .game{margin:24px 0 0}
+.modal-card .gamenum{font-size:clamp(44px,12vw,60px)}
+.modal-card .gamecap{font-size:21px}
 .bigbtn{display:inline-block;background:var(--paper);color:var(--blue);border:3px solid var(--blue);
   border-radius:999px;padding:17px 26px;font-family:"Archivo Black",sans-serif;font-size:15px;
   text-transform:uppercase;letter-spacing:.05em;box-shadow:0 8px 0 var(--blue);
@@ -431,12 +434,6 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
     </div>
   </dl>
 
-  <div class="game">
-    <button class="bigbtn" id="bigbtn">Koliko ćemo se napiti? (klikaj me)</button>
-    <div class="gamenum hidden" id="gamenum">0</div>
-    <p class="gamecap" id="gamecap">klikaj dok se ne napijemo</p>
-  </div>
-
   <section class="panel">
     <span class="ribbon">Prijave do 20. rujna</span>
     <div id="form">
@@ -489,7 +486,11 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
       Dođi taksijem. Kući isto taksijem.
     </p>
     <p class="wap">I za svaki slučaj mi javi na WhatsApp da dolaziš.</p>
-    <button class="cta modal-btn" id="modalOk">Hvala ti</button>
+    <div class="game modalgame">
+      <button class="bigbtn" id="bigbtn">Koliko ćemo se napiti? (klikaj me)</button>
+      <div class="gamenum hidden" id="gamenum">0</div>
+      <p class="gamecap" id="gamecap">klikaj dok se ne napijemo — prije te ne puštam van</p>
+    </div>
   </div>
 </div>
 
@@ -677,7 +678,7 @@ function ytLink(){
     '" target="_blank" rel="noopener">otvori pjesmu</a>';
 }
 
-/* igra: koliko ćemo se napiti */
+/* igra: koliko ćemo se napiti — u potvrdnom popupu, 20 klikova za izlaz */
 const bigbtn = $("bigbtn"), gamenum = $("gamenum"), gamecap = $("gamecap");
 let clicks = 0, exploding = false;
 bigbtn.addEventListener("click", function(e){
@@ -689,7 +690,7 @@ bigbtn.addEventListener("click", function(e){
   void gamenum.offsetWidth;
   gamenum.classList.add("pop");
   if(!reduced) burst(e.clientX, e.clientY, 10);
-  if(clicks >= CONFIG.CILJ) kaboom();
+  if(clicks >= CONFIG.CILJ){ closeModal(); kaboom(); }
 });
 function kaboom(){
   exploding = true;
@@ -713,18 +714,32 @@ function kaboom(){
 function resetGame(){
   exploding = false; clicks = 0;
   gamenum.classList.add("hidden");
-  gamecap.textContent = "klikaj dok se ne napijemo";
+  gamecap.textContent = "klikaj dok se ne napijemo — prije te ne puštam van";
 }
 
-/* kalendar */
+/* kalendar: iPhone dobije .ics s podsjetnikom (Apple Kalendar), ostali Google Calendar */
 const EV = { start:"20260926T090000Z", end:"20260926T160000Z",
   title:"Čiko — 30. rođendan", desc:"Dnevni party. Dolazak od 11h.", loc:CONFIG.MJESTO };
-$("ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent([
-  "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//tri banke//HR","BEGIN:VEVENT",
-  "UID:tribanke-26092026@ciko","DTSTAMP:"+EV.start,"DTSTART:"+EV.start,"DTEND:"+EV.end,
-  "SUMMARY:"+EV.title,"DESCRIPTION:"+EV.desc,"LOCATION:"+EV.loc,"URL:"+CONFIG.MAPS_URL,
-  "END:VEVENT","END:VCALENDAR"].join("\r\n"));
-$("ics").setAttribute("download","ciko-30.ics");
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+if(isIOS){
+  $("ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent([
+    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//tri banke//HR","BEGIN:VEVENT",
+    "UID:tribanke-26092026@ciko","DTSTAMP:"+EV.start,"DTSTART:"+EV.start,"DTEND:"+EV.end,
+    "SUMMARY:"+EV.title,"DESCRIPTION:"+EV.desc,"LOCATION:"+EV.loc,"URL:"+CONFIG.MAPS_URL,
+    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Tri banke! Prkanj od 11h.",
+    "TRIGGER:-PT3H","END:VALARM",
+    "END:VEVENT","END:VCALENDAR"].join("\r\n"));
+  $("ics").setAttribute("download","ciko-30.ics");
+}else{
+  $("ics").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=" + encodeURIComponent(EV.title) +
+    "&dates=" + EV.start + "/" + EV.end +
+    "&details=" + encodeURIComponent(EV.desc + " " + CONFIG.MAPS_URL) +
+    "&location=" + encodeURIComponent(EV.loc);
+  $("ics").target = "_blank";
+  $("ics").rel = "noopener";
+}
 
 /* prijava */
 const plusOne = $("plusOne"), plusField = $("plusField"), err = $("err"), btn = $("send");
@@ -760,14 +775,14 @@ btn.addEventListener("click", async function(){
 });
 function fail(m){ err.textContent = m; err.classList.remove("hidden"); }
 
-$("modalOk").addEventListener("click", function(){
+function closeModal(){
   $("modal").classList.add("hidden");
   $("ime").value = ""; $("cuga").value = ""; $("plusIme").value = "";
   plusOne.checked = false;
   plusField.classList.add("hidden");
   btn.disabled = false; btn.textContent = "Dolazim";
   window.scrollTo({ top: 0, behavior: "smooth" });
-});
+}
 </script>
 </body>
 </html>
