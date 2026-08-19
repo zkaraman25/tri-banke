@@ -76,6 +76,7 @@ body.kaboom .wrap{animation:drunk 1.4s ease-in-out infinite}
   50%{transform:translate(8px,-7px) rotate(1.6deg);filter:blur(1.2px) hue-rotate(-45deg) saturate(1.4)}
   75%{transform:translate(-7px,-5px) rotate(-1deg);filter:blur(2.6px) hue-rotate(95deg) saturate(1.8)}}
 .wrap{position:relative;z-index:2;max-width:560px;margin:0 auto;
+  overflow-y:clip;
   padding:30px 22px calc(30px + env(safe-area-inset-bottom))}
 
 /* pozadinske gluposti */
@@ -332,15 +333,15 @@ body.dimmed #snow{display:none}
   <div class="floaty" style="top:760px;right:-20px;width:52px"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
   <div class="floaty" style="top:1080px;left:-14px;width:46px;animation-delay:2s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
   <div class="floaty" style="top:1400px;left:-16px;width:44px;animation-delay:1.4s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
-  <div class="floaty" style="top:1750px;right:-24px;width:50px;animation-delay:3.1s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
-  <div class="floaty" style="top:2050px;left:-20px;width:42px;animation-delay:.9s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
+  <div class="floaty" style="bottom:760px;right:-24px;width:50px;animation-delay:3.1s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
+  <div class="floaty" style="bottom:620px;left:-20px;width:42px;animation-delay:.9s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
   <div class="floaty" style="bottom:180px;right:-14px;width:46px;animation-delay:2.6s"><svg viewBox="0 0 60 100"><ellipse cx="30" cy="34" rx="24" ry="30" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M30 64l-4 8h8z" fill="#1B2ACB"/><path d="M30 72c-5 12 3 20 1 26" stroke="#1B2ACB" stroke-width="1.6" fill="none"/></svg></div>
 
   <!-- kapice -->
   <div class="doodle bob" style="top:480px;right:-6px;width:44px"><svg viewBox="0 0 60 66"><path d="M30 6L10 52h40z" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M19 36h22M15 45h30" stroke="#1B2ACB" stroke-width="2"/><circle cx="30" cy="6" r="4.4" fill="#1B2ACB"/></svg></div>
   <div class="doodle bob" style="top:1250px;left:-10px;width:38px;animation-delay:1.2s"><svg viewBox="0 0 60 66"><path d="M30 6L10 52h40z" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M19 36h22M15 45h30" stroke="#1B2ACB" stroke-width="2"/><circle cx="30" cy="6" r="4.4" fill="#1B2ACB"/></svg></div>
   <div class="doodle bob" style="bottom:520px;right:-8px;width:40px;animation-delay:2.4s"><svg viewBox="0 0 60 66"><path d="M30 6L10 52h40z" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M19 36h22M15 45h30" stroke="#1B2ACB" stroke-width="2"/><circle cx="30" cy="6" r="4.4" fill="#1B2ACB"/></svg></div>
-  <div class="doodle bob" style="top:1930px;right:-4px;width:36px;animation-delay:.7s"><svg viewBox="0 0 60 66"><path d="M30 6L10 52h40z" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M19 36h22M15 45h30" stroke="#1B2ACB" stroke-width="2"/><circle cx="30" cy="6" r="4.4" fill="#1B2ACB"/></svg></div>
+  <div class="doodle bob" style="bottom:960px;right:-4px;width:36px;animation-delay:.7s"><svg viewBox="0 0 60 66"><path d="M30 6L10 52h40z" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M19 36h22M15 45h30" stroke="#1B2ACB" stroke-width="2"/><circle cx="30" cy="6" r="4.4" fill="#1B2ACB"/></svg></div>
 
   <!-- svijeće -->
   <div class="doodle" style="top:900px;left:-6px;width:28px"><svg viewBox="0 0 40 84"><path class="flame" d="M20 10c5 6 5 12 0 16c-5-4-5-10 0-16z" fill="#1B2ACB"/><path d="M20 26v6" stroke="#1B2ACB" stroke-width="2.4"/><rect x="13" y="32" width="14" height="44" fill="none" stroke="#1B2ACB" stroke-width="3"/><path d="M16 42h8M16 56h8" stroke="#1B2ACB" stroke-width="2"/></svg></div>
@@ -709,7 +710,15 @@ window.onYouTubeIframeAPIReady = function(){
     videoId: CONFIG.YT_ID,
     playerVars:{ playsinline:1, controls:0, start:CONFIG.YT_START, rel:0 },
     events:{
-      onReady: function(){ if(wantPlay) player.playVideo(); },
+      onReady: function(){
+        if(!wantPlay) return;
+        player.playVideo();
+        setTimeout(function(){
+          if(playing) return;
+          player.mute(); player.playVideo();
+          setTimeout(function(){ if(playing) player.unMute(); }, 900);
+        }, 900);
+      },
       onStateChange: function(e){ setPlaying(e.data === YT.PlayerState.PLAYING); },
       onError: function(){ ytLink(); }
     }
