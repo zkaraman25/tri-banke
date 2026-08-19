@@ -764,20 +764,14 @@ function resetGame(){
   gamecap.textContent = "drži dok se ne napijemo — prije te ne puštam van";
 }
 
-/* kalendar: iPhone dobije .ics s podsjetnikom (Apple Kalendar), ostali Google Calendar */
+/* kalendar: iPhone dobije hostani .ics s podsjetnikom (Apple Kalendar), ostali Google Calendar.
+   Podaci o eventu žive i u ciko-30.ics — promijeniš li termin, promijeni i tamo. */
 const EV = { start:"20260926T090000Z", end:"20260926T160000Z",
   title:"Čiko — 30. rođendan", desc:"Dnevni party. Dolazak od 11h.", loc:CONFIG.MJESTO };
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 if(isIOS){
-  $("ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent([
-    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//tri banke//HR","BEGIN:VEVENT",
-    "UID:tribanke-26092026@ciko","DTSTAMP:"+EV.start,"DTSTART:"+EV.start,"DTEND:"+EV.end,
-    "SUMMARY:"+EV.title,"DESCRIPTION:"+EV.desc,"LOCATION:"+EV.loc,"URL:"+CONFIG.MAPS_URL,
-    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Tri banke! Prkanj od 11h.",
-    "TRIGGER:-PT3H","END:VALARM",
-    "END:VEVENT","END:VCALENDAR"].join("\r\n"));
-  $("ics").setAttribute("download","ciko-30.ics");
+  $("ics").href = "ciko-30.ics";
 }else{
   $("ics").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(EV.title) +
