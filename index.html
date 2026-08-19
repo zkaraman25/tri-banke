@@ -41,13 +41,15 @@ const CONFIG = {
 <style>
 :root{--paper:#EFE9DC;--paper-2:#E7E0D1;--blue:#1B2ACB;--soft:rgba(27,42,203,.13)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-html{-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip;
+  overscroll-behavior-y:none;background:var(--paper)}
 /* partijanerska kapica kao kursor */
 html,body,a,button,label,input,.vinyl{
   cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cpath d='M5 5L28 15 14 29z' fill='%231B2ACB'/%3E%3Cpath d='M12 10.2l11 4.8M9.4 16.4l10.2 4.4' stroke='%23EFE9DC' stroke-width='2'/%3E%3Ccircle cx='5' cy='5' r='3.6' fill='%231B2ACB'/%3E%3C/svg%3E") 5 5, auto;
 }
 body{background:var(--paper);color:var(--blue);font-family:"Archivo",system-ui,sans-serif;
-  font-size:16px;line-height:1.5;min-height:100dvh;overflow-x:hidden;overflow-x:clip;position:relative}
+  font-size:16px;line-height:1.5;min-height:100dvh;overflow-x:hidden;overflow-x:clip;
+  overscroll-behavior-y:none;position:relative}
 body::before{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:0;
   background:linear-gradient(108deg,rgba(0,0,0,0) 0 26%,rgba(0,0,0,.05) 34%,rgba(0,0,0,.075) 44%,rgba(0,0,0,0) 56%)}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
