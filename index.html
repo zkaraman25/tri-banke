@@ -21,8 +21,9 @@ const CONFIG = {
   // Regeneriraj potpis u Power Automate trigeru i zamijeni URL prije slanja pozivnice.
   FLOW_URL: "https://default658512536250442aa5126e48e5331d.70.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/24/workflows/4ba8103220c04492bd98e9402f200077/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Spg3otnDELiKUdFEjmpLyUWrPWpwhWrvbN7kJf0LkMo",
   MAPS_URL:  "https://maps.app.goo.gl/d1shjGt6W8L8SKum6",
-  YT_ID:     "iH7OXVCdb5E",
-  YT_START:  93,
+  MP3:       "pjesma.m4a",
+  MP3_START: 93,   // pjesma kreće od 1:33
+  YT_ID:     "iH7OXVCdb5E",   // fallback link ako se audio ne učita
   MJESTO:    "Prkanj, Lučko",
   DAN:       "subota, 26. rujna",
   SAT:       "od 11h, dnevni party",
@@ -301,9 +302,6 @@ body.dimmed #snow{display:none}
   text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:9px}
 .contact .taxi svg{width:26px;height:18px;stroke:var(--blue);stroke-width:2;fill:none}
 
-#yt{position:absolute;left:-9999px;top:0;width:2px;height:2px;opacity:.001;pointer-events:none}
-#yt iframe{width:100%;height:100%}
-
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#snow{display:none}}
 </style>
 </head>
@@ -547,7 +545,6 @@ body.dimmed #snow{display:none}
 <div class="successmsg hidden" id="successmsg"><div class="successcard">Uspješno si se zapisao!<small>klikni bilo gdje za povratak</small></div></div>
 <div class="blocker hidden" id="blocker"></div>
 
-<div id="yt" aria-hidden="true"></div>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -697,33 +694,25 @@ if(!reduced){
 }
 
 /* ploča + zvuk */
-let player = null, playing = false, wantPlay = false;
+let playing = false;
 const vinyl = $("vinyl"), ball = $("ball"), playTxt = $("playTxt"), glyph = $("glyph");
 const PLAY = "M7 4l13 8-13 8z", PAUSE = "M7 4h4v16H7zM14 4h4v16h-4z";
 
-const tag = document.createElement("script");
-tag.src = "https://www.youtube.com/iframe_api";
-document.head.appendChild(tag);
-
-window.onYouTubeIframeAPIReady = function(){
-  player = new YT.Player("yt", {
-    videoId: CONFIG.YT_ID,
-    playerVars:{ playsinline:1, controls:0, start:CONFIG.YT_START, rel:0 },
-    events:{
-      onReady: function(){
-        if(!wantPlay) return;
-        player.playVideo();
-        setTimeout(function(){
-          if(playing) return;
-          player.mute(); player.playVideo();
-          setTimeout(function(){ if(playing) player.unMute(); }, 900);
-        }, 900);
-      },
-      onStateChange: function(e){ setPlaying(e.data === YT.PlayerState.PLAYING); },
-      onError: function(){ ytLink(); }
-    }
-  });
-};
+const audio = new Audio(CONFIG.MP3);
+audio.preload = "auto";
+let cued = false;
+function cue(){
+  if(cued) return;
+  try{ audio.currentTime = CONFIG.MP3_START; cued = true; }catch(e){}
+}
+audio.addEventListener("loadedmetadata", cue);
+audio.addEventListener("ended", function(){ audio.currentTime = CONFIG.MP3_START; audio.play(); });
+audio.addEventListener("play", function(){ setPlaying(true); });
+audio.addEventListener("pause", function(){ setPlaying(false); });
+function tryPlay(){
+  cue();
+  audio.play().catch(function(){ ytLink(); });
+}
 function setPlaying(on){
   playing = party = on;
   vinyl.classList.toggle("on", on);
@@ -732,8 +721,7 @@ function setPlaying(on){
   playTxt.textContent = on ? "svira · klik za stop" : "klikni za pjesmu";
 }
 vinyl.addEventListener("click", function(){
-  if(!player || !player.playVideo){ ytLink(); return; }
-  if(playing) player.pauseVideo(); else player.playVideo();
+  if(playing) audio.pause(); else tryPlay();
 });
 function ytLink(){
   playTxt.innerHTML = '<a href="https://www.youtube.com/watch?v=' + CONFIG.YT_ID +
@@ -742,8 +730,7 @@ function ytLink(){
 
 /* uvodni overlay: play pokreće pjesmu i pušta na stranicu */
 $("introPlay").addEventListener("click", function(){
-  wantPlay = true;
-  if(player && player.playVideo) player.playVideo();
+  tryPlay();
   const intro = $("intro");
   intro.classList.add("away");
   document.body.classList.remove("locked");
