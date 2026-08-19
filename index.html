@@ -41,13 +41,13 @@ const CONFIG = {
 <style>
 :root{--paper:#EFE9DC;--paper-2:#E7E0D1;--blue:#1B2ACB;--soft:rgba(27,42,203,.13)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
 /* partijanerska kapica kao kursor */
 html,body,a,button,label,input,.vinyl{
   cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cpath d='M5 5L28 15 14 29z' fill='%231B2ACB'/%3E%3Cpath d='M12 10.2l11 4.8M9.4 16.4l10.2 4.4' stroke='%23EFE9DC' stroke-width='2'/%3E%3Ccircle cx='5' cy='5' r='3.6' fill='%231B2ACB'/%3E%3C/svg%3E") 5 5, auto;
 }
 body{background:var(--paper);color:var(--blue);font-family:"Archivo",system-ui,sans-serif;
-  font-size:16px;line-height:1.5;min-height:100dvh;overflow-x:hidden;position:relative}
+  font-size:16px;line-height:1.5;min-height:100dvh;overflow-x:hidden;overflow-x:clip;position:relative}
 body::before{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:0;
   background:linear-gradient(108deg,rgba(0,0,0,0) 0 26%,rgba(0,0,0,.05) 34%,rgba(0,0,0,.075) 44%,rgba(0,0,0,0) 56%)}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -237,6 +237,11 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
 .modal-card .wap{margin-top:14px;font-family:"Caveat",cursive;font-size:23px;font-weight:600;
   transform:rotate(-1.5deg)}
 .modal-btn{margin-top:22px}
+.successmsg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);z-index:8;
+  background:var(--blue);color:var(--paper);font-family:"Archivo Black",sans-serif;
+  font-size:clamp(20px,6vw,30px);text-transform:uppercase;text-align:center;line-height:1.2;
+  padding:20px 26px;border-radius:8px;box-shadow:8px 8px 0 rgba(27,42,203,.35);
+  max-width:min(90vw,420px);animation:modalpop .45s cubic-bezier(.2,1.5,.4,1)}
 
 /* marquee + gumbi + kontakt */
 .marquee{margin-top:30px;overflow:hidden;background:var(--blue);color:var(--paper);border-radius:4px;
@@ -494,6 +499,8 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
   </div>
 </div>
 
+<div class="successmsg hidden" id="successmsg">Uspješno si se zapisao!</div>
+
 <div id="yt" aria-hidden="true"></div>
 
 <script>
@@ -695,7 +702,7 @@ bigbtn.addEventListener("click", function(e){
 function kaboom(){
   exploding = true;
   gamecap.textContent = "puklo je! i polilo se!";
-  if(reduced){ resetGame(); return; }
+  if(reduced){ resetGame(); success(); return; }
   document.body.classList.add("kaboom");
   boom();
   ball.classList.add("on");
@@ -709,7 +716,16 @@ function kaboom(){
     calm();
     if(!playing) ball.classList.remove("on");
     resetGame();
+    success();
   }, 4600);
+}
+function success(){
+  const s = $("successmsg");
+  s.classList.remove("hidden");
+  setTimeout(function(){
+    s.classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  }, 2200);
 }
 function resetGame(){
   exploding = false; clicks = 0;
@@ -781,7 +797,6 @@ function closeModal(){
   plusOne.checked = false;
   plusField.classList.add("hidden");
   btn.disabled = false; btn.textContent = "Dolazim";
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
 </body>
