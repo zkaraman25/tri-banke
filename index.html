@@ -249,6 +249,28 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
 @keyframes successpop{
   from{transform:rotate(-2deg) scale(.7);opacity:0}
   to{transform:rotate(-2deg) scale(1);opacity:1}}
+/* uvodni overlay */
+.intro{position:fixed;inset:0;z-index:11;background:var(--paper);display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:22px;transition:opacity .55s}
+.intro::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(rgba(27,42,203,.10) 1.2px,transparent 1.2px);background-size:30px 30px}
+.intro.away{opacity:0;pointer-events:none}
+.introkicker{font-family:"Archivo Black",sans-serif;font-size:13px;letter-spacing:.18em;
+  text-transform:uppercase;opacity:.7}
+.introtitle{font-family:"Archivo Black",sans-serif;font-weight:400;font-size:clamp(46px,13.5vw,88px);
+  line-height:.85;text-transform:uppercase;letter-spacing:-.02em;margin:10px 0 32px}
+.introplay{width:clamp(112px,32vw,150px);aspect-ratio:1;border-radius:50%;border:0;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 50%,var(--blue) 0 34%,transparent 34.5%),
+    repeating-radial-gradient(circle at 50% 50%,var(--blue) 0 1.5px,var(--paper) 1.5px 6px);
+  box-shadow:0 0 0 3px var(--blue),0 10px 0 rgba(27,42,203,.9);
+  transition:transform .1s,box-shadow .1s;animation:pulse 1.6s ease-in-out infinite}
+.introplay svg{width:30%;fill:var(--paper);margin-left:4%}
+.introplay:active{transform:translateY(8px);box-shadow:0 0 0 3px var(--blue),0 2px 0 rgba(27,42,203,.9)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.introcap{font-family:"Caveat",cursive;font-size:27px;margin-top:24px;transform:rotate(-2deg)}
+body.locked{overflow:hidden}
+
 .blocker{position:fixed;inset:0;z-index:9;background:transparent}
 .blocker.dim{background:rgba(239,233,220,.4);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 body.dimmed #snow{display:none}
@@ -282,7 +304,17 @@ body.dimmed #snow{display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#snow{display:none}}
 </style>
 </head>
-<body>
+<body class="locked">
+<div class="intro" id="intro">
+  <div>
+    <span class="introkicker">26.09. · Prkanj</span>
+    <div class="introtitle">Tri<br>banke</div>
+    <button class="introplay" id="introPlay" aria-label="Pusti muziku i uđi">
+      <svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>
+    </button>
+    <p class="introcap">stisni play za ulaz</p>
+  </div>
+</div>
 <canvas id="snow"></canvas>
 <div class="flash"></div>
 <div class="drunkword" id="drunkword"></div>
@@ -662,7 +694,7 @@ if(!reduced){
 }
 
 /* ploča + zvuk */
-let player = null, playing = false;
+let player = null, playing = false, wantPlay = false;
 const vinyl = $("vinyl"), ball = $("ball"), playTxt = $("playTxt"), glyph = $("glyph");
 const PLAY = "M7 4l13 8-13 8z", PAUSE = "M7 4h4v16H7zM14 4h4v16h-4z";
 
@@ -675,6 +707,7 @@ window.onYouTubeIframeAPIReady = function(){
     videoId: CONFIG.YT_ID,
     playerVars:{ playsinline:1, controls:0, start:CONFIG.YT_START, rel:0 },
     events:{
+      onReady: function(){ if(wantPlay) player.playVideo(); },
       onStateChange: function(e){ setPlaying(e.data === YT.PlayerState.PLAYING); },
       onError: function(){ ytLink(); }
     }
@@ -695,6 +728,16 @@ function ytLink(){
   playTxt.innerHTML = '<a href="https://www.youtube.com/watch?v=' + CONFIG.YT_ID +
     '" target="_blank" rel="noopener">otvori pjesmu</a>';
 }
+
+/* uvodni overlay: play pokreće pjesmu i pušta na stranicu */
+$("introPlay").addEventListener("click", function(){
+  wantPlay = true;
+  if(player && player.playVideo) player.playVideo();
+  const intro = $("intro");
+  intro.classList.add("away");
+  document.body.classList.remove("locked");
+  setTimeout(function(){ intro.classList.add("hidden"); }, 600);
+});
 
 /* igra: koliko ćemo se napiti — drži gumb dok brojka ne dođe do cilja */
 const bigbtn = $("bigbtn"), gamenum = $("gamenum"), gamecap = $("gamecap");
