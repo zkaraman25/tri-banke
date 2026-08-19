@@ -28,7 +28,7 @@ const CONFIG = {
   SAT:       "od 11h, dnevni party",
   TEL:       "0917513139",
   TEL_TXT:   "091 751 3139",
-  DEMO:      true,   // true = ne šalje u flow, samo pokaže potvrdu; vrati na false prije objave
+  DEMO:      false,   // true = ne šalje u flow, samo pokaže potvrdu; vrati na false prije objave
   CILJ:      20,
   PIJANI_TEKST: "Prtafffffff sam"
 };
@@ -599,7 +599,7 @@ function trail(x, y){
     vr:(Math.random()-.5)*.3, a:.85, loop:false, tr:true });
 }
 function firework(){
-  const x = W*(.12+Math.random()*.76), y = H*(.1+Math.random()*.42), n = 26;
+  const x = W*(.12+Math.random()*.76), y = H*(.1+Math.random()*.42), n = 18;
   for(let i=0;i<n;i++){
     const a = Math.random()*6.283, sp = 2.4+Math.random()*3.4;
     parts.push({ x:x, y:y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-1,
@@ -611,14 +611,14 @@ function pour(n){
     vy:7+Math.random()*7, s:3+Math.random()*3.5, r:0, vr:0, a:.9, loop:false, liq:true });
 }
 if(!reduced){
-  for(let i=0;i<130;i++){ const p = drift(); p.y = Math.random()*H; parts.push(p); }
+  for(let i=0;i<65;i++){ const p = drift(); p.y = Math.random()*H; parts.push(p); }
   let tt = 0;
   addEventListener("pointermove", function(e){
     mx = e.clientX; my = e.clientY;
-    tt++; if(tt % 2 === 0 && parts.length < 620) trail(mx, my);
+    tt++; if(tt % 4 === 0 && parts.length < 320) trail(mx, my);
   });
-  setInterval(function(){ firework(); if(party) firework(); }, 2600);
-  addEventListener("pointerdown", function(e){ burst(e.clientX, e.clientY, 22); });
+  setInterval(function(){ firework(); if(party) firework(); }, 4500);
+  addEventListener("pointerdown", function(e){ burst(e.clientX, e.clientY, 14); });
   (function frame(){
     ctx.clearRect(0,0,W,H);
     const sp = party ? 1.7 : 1;
