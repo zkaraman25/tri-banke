@@ -238,12 +238,18 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
 .modal-card .wap{margin-top:14px;font-family:"Caveat",cursive;font-size:23px;font-weight:600;
   transform:rotate(-1.5deg)}
 .modal-btn{margin-top:22px}
-.successmsg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);z-index:8;
+.successmsg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);z-index:10;
   background:var(--blue);color:var(--paper);font-family:"Archivo Black",sans-serif;
   font-size:clamp(20px,6vw,30px);text-transform:uppercase;text-align:center;line-height:1.2;
   padding:20px 26px;border-radius:8px;box-shadow:8px 8px 0 rgba(27,42,203,.35);
-  max-width:min(90vw,420px);animation:modalpop .45s cubic-bezier(.2,1.5,.4,1)}
+  max-width:min(90vw,420px);pointer-events:none;animation:successpop .45s cubic-bezier(.2,1.5,.4,1)}
+.successmsg small{display:block;font-family:"Caveat",cursive;font-size:20px;
+  text-transform:none;margin-top:10px;opacity:.85}
+@keyframes successpop{
+  from{transform:translate(-50%,-50%) rotate(-2deg) scale(.7);opacity:0}
+  to{transform:translate(-50%,-50%) rotate(-2deg) scale(1);opacity:1}}
 .blocker{position:fixed;inset:0;z-index:9;background:transparent}
+.blocker.dim{background:rgba(239,233,220,.4);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 
 /* marquee + gumbi + kontakt */
 .marquee{margin-top:30px;overflow:hidden;background:var(--blue);color:var(--paper);border-radius:4px;
@@ -501,7 +507,7 @@ button.cta:disabled{opacity:.5;transform:none;box-shadow:none}
   </div>
 </div>
 
-<div class="successmsg hidden" id="successmsg">Uspješno si se zapisao!</div>
+<div class="successmsg hidden" id="successmsg">Uspješno si se zapisao!<small>klikni bilo gdje za povratak</small></div>
 <div class="blocker hidden" id="blocker"></div>
 
 <div id="yt" aria-hidden="true"></div>
@@ -733,16 +739,15 @@ function kaboom(){
     success();
   }, 4600);
 }
-let homeTimer = null;
 function success(){
   $("blocker").classList.remove("hidden");
+  $("blocker").classList.add("dim");
   $("successmsg").classList.remove("hidden");
-  homeTimer = setTimeout(goHome, 2200);
 }
 function goHome(){
-  clearTimeout(homeTimer);
   $("successmsg").classList.add("hidden");
   $("blocker").classList.add("hidden");
+  $("blocker").classList.remove("dim");
   window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
 }
 /* dok traje animacija klik ne radi ništa; tek kad se pokaže poruka, klik vraća na vrh */
